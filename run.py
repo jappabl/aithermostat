@@ -38,7 +38,7 @@ observation_size = len(state)
 print(action_size)
 
 policy_net = DQN(observation_size, action_size).to("cpu")
-policy_net.load_state_dict(torch.load("subtract_4_3k_random_weather_2.pt", map_location="cpu"))
+policy_net.load_state_dict(torch.load("subtract_4_3k_random_weather.pt", map_location="cpu"))
 
 import matplotlib.pyplot as plt
 import numpy as np

@@ -37,34 +37,25 @@ def calc_wall_conduction(int_wall_temp: float, out_wall_temp: float) -> float:
 	return joule_to_temp_change(change * 60)
 
 # calculate convection from inner wall to room air
-def calc_convection_to_room(room_temp: float, int_wall_temp: float) -> float:
+def calc_wall_convection_to_room(room_temp: float, int_wall_temp: float) -> float:
 	change = const.INSIDE_CONVECTION_COEFF * wall_area_sum * (int_wall_temp - room_temp)
 	return joule_to_temp_change(change * 60)
 
-# def calc_transfer_into_roof(in_temp: float, out_temp: float) -> float:
-# 	change = const.OUTSIDE_CONVECTION_COEFF * roof_area * (out_temp - in_temp)/2
-# 	return joule_to_temp_change(change * 60)
+# calculate convection from outside air to roof outside
+def calc_convection_to_ext_roof(out_wall_temp: float, time: float) -> float:
+	change = const.OUTSIDE_CONVECTION_COEFF * roof_area * (const.OUTSIDE_TEMP[time] - out_wall_temp) / 2
+	return joule_to_temp_change(change * 60)
 
-# def calc_next_roof_temp(cur_roof_temp: float, time: float) -> float:
-# 	change = calc_transfer_into_roof(cur_roof_temp, const.OUTSIDE_TEMP[time])
-# 	return cur_roof_temp + change
+# calculate conduction transfer from outside to inside of roof
+def calc_roof_conduction(int_wall_temp: float, out_wall_temp: float) -> float:
+	# TODO possible investigate switching int_wall_temp and out_wall_temp
+	change = roof_area * (out_wall_temp - int_wall_temp) * const.ROOF_THERM_COND / const.WALL_THICK
+	return joule_to_temp_change(change * 60)
 
-# def calc_transfer_thru_roof(in_temp: float, cur_roof_temp: float) -> float:
-# 	change = roof_area * (in_temp - cur_roof_temp) * const.ROOF_THERM_COND / const.ROOF_THICK
-# 	return joule_to_temp_change(change * 60)
-
-# def calc_next_int_roof_temp(cur_temp: float, cur_roof_temp: float) -> float:
-# 	change = calc_transfer_thru_roof(cur_temp, cur_roof_temp)
-# 	return cur_roof_temp + change
-
-# def calc_transfer_roof_to_air(in_temp: float, cur_int_roof_temp: float) -> float:
-# 	change = const.INSIDE_CONVECTION_COEFF * roof_area * (cur_int_roof_temp - in_temp)
-# 	return joule_to_temp_change(change * 60)
-
-
-# def calc_transfer_thru_roof(in_temp: float, out_temp: float) -> float:
-# 	change = roof_area * (out_temp - in_temp) * const.ROOF_THERM_COND / const.ROOF_THICK
-# 	return joule_to_temp_change(change * 60)
+# calculate convection from inside of roof to room air
+def calc_roof_convection_to_room(room_temp: float, int_wall_temp: float) -> float:
+	change = const.INSIDE_CONVECTION_COEFF * roof_area * (int_wall_temp - room_temp)
+	return joule_to_temp_change(change * 60)
 
 # -1 <= power <= 1
 # -1 = full cool, 1 = full heat
@@ -74,12 +65,6 @@ def calc_ac_effect(power: float) -> float:
 	change = cool_energy_transfer_watt if power < 0 else heat_energy_transfer_watt
 	random_tensor = random.uniform(const.NOISE_MULT_MIN, const.NOISE_MULT_MAX)
 	return joule_to_temp_change(change * random_tensor * 60)
-
-def calc_next_temp(power: float, room_temp: float, int_wall_temp: float) -> float:
-	change1 = calc_convection_to_room(room_temp, int_wall_temp)
-	change2 = calc_ac_effect(power)
-	return room_temp + change1 + change2
-
 
 # def calc_next_temp(power: float, cur_temp: float, time: float) -> float:
 # 	change = calc_transfer_thru_wall(cur_temp, torch.take(const.OUTSIDE_TEMP, time))

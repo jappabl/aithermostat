@@ -39,7 +39,7 @@ class Environment(gym.Env):
 		
 		self._cur_out_wall_temp = const.WALL_STARTING_TEMP
 		self._cur_int_wall_temp = self._cur_temp
-		self._cur_roof_temp = const.WALL_STARTING_TEMP
+		self._cur_out_roof_temp = const.WALL_STARTING_TEMP
 		self._cur_int_roof_temp = self._cur_temp
 
 		return self._get_observations(), self._get_reward()
@@ -52,29 +52,32 @@ class Environment(gym.Env):
 			self._cur_out_wall_temp,
 			self._time + self._start_time
 		)
-
 		self._cur_int_wall_temp += sim.calc_wall_conduction(
 			self._cur_int_wall_temp,
 			self._cur_out_wall_temp
 		)
-
-		# self._cur_roof_temp = sim.calc_next_roof_temp(
-		# 	self._cur_roof_temp,
-		# 	self._time + self._start_time
-		# )
-
-		# self._cur_int_roof_temp = sim.calc_next_int_roof_temp(
-		# 	self._cur_int_roof_temp,
-		# 	self._time + self._start_time
-		# )
-
-		convection_to_room = sim.calc_convection_to_room(
+		wall_convection_to_room = sim.calc_wall_convection_to_room(
 			self._cur_temp,
 			self._cur_int_wall_temp
 		)
+		self._cur_int_wall_temp -= wall_convection_to_room
+		self._cur_temp += wall_convection_to_room
 
-		self._cur_int_wall_temp -= convection_to_room
-		self._cur_temp += convection_to_room
+		self._cur_out_roof_temp += sim.calc_convection_to_ext_roof(
+			self._cur_out_roof_temp,
+			self._time + self._start_time
+		)
+		self._cur_int_roof_temp += sim.calc_roof_conduction(
+			self._cur_int_roof_temp,
+			self._cur_out_roof_temp
+		)
+		roof_convection_to_room = sim.calc_roof_convection_to_room(
+			self._cur_temp,
+			self._cur_int_roof_temp
+		)
+		self._cur_int_roof_temp -= roof_convection_to_room
+		self._cur_temp += roof_convection_to_room
+
 		self._cur_temp += sim.calc_ac_effect(self._actions[power])
 
 		reward = self._get_reward()
