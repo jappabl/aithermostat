@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 room_air_mass = const.ROOM_LENGTH * const.ROOM_WIDTH * const.ROOM_HEIGHT * const.AIR_DENSITY
 wall_area_sum = 2 * (const.ROOM_LENGTH * const.ROOM_HEIGHT + const.ROOM_WIDTH * const.ROOM_HEIGHT)
 roof_area = (const.ROOM_LENGTH * const.ROOM_WIDTH)
-cool_energy_transfer_watt = const.COOL_BTUS / 3.41
+cool_energy_transfer_watt = -const.COOL_BTUS / 3.41
 heat_energy_transfer_watt = const.HEAT_BTUS / 3.41
 
 # power_transfers = [cool_energy_transfer_watt, heat_energy_transfer_watt]

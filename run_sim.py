@@ -37,7 +37,7 @@ state, _ = env.reset(num_setpoints=1, length=sim_max, start_time=weather_start)
 for i in range(sim_max):	
 	temperatures[i] = env.get_cur_temp()
 	outside_temp[i] = const.OUTSIDE_TEMP[weather_start + i]
-	state, _, _ = env.step(1)
+	state, _, _ = env.step(0)
 
 ax1.plot(xvalues, temperatures, color="red", linewidth=0.1)
 ax1.plot(xvalues, outside_temp, color="green", linewidth=0.1)
