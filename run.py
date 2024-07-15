@@ -103,5 +103,7 @@ ax2.plot(xvalues, mean_dev, color="purple", linewidth=0.1)
 # plt.show()
 plt.savefig("old2.png", dpi=1000)
 
+print(cycles)
+
 # cycles
 # m2K/W * m2 * K

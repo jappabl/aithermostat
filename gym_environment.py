@@ -45,16 +45,15 @@ class Environment(gym.Env):
 		return self._get_observations(), self._get_reward()
 
 	def step(self, power):
-		# print(power)
 		if self._time in self._setpoint_list:
 			self._cur_setpoint = self._setpoint_list[self._time]
 
-		self._cur_out_wall_temp = sim.calc_convection_to_ext_wall(
+		self._cur_out_wall_temp += sim.calc_convection_to_ext_wall(
 			self._cur_out_wall_temp,
 			self._time + self._start_time
 		)
 
-		self._cur_int_wall_temp = sim.calc_wall_conduction(
+		self._cur_int_wall_temp += sim.calc_wall_conduction(
 			self._cur_int_wall_temp,
 			self._cur_out_wall_temp
 		)
@@ -69,14 +68,14 @@ class Environment(gym.Env):
 		# 	self._time + self._start_time
 		# )
 
-		# print(power)
-
-		self._cur_temp = sim.calc_next_temp(
-			self._actions[power],
+		convection_to_room = sim.calc_convection_to_room(
 			self._cur_temp,
 			self._cur_int_wall_temp
-			# self._time + self._start_time
 		)
+
+		self._cur_int_wall_temp -= convection_to_room
+		self._cur_temp += convection_to_room
+		self._cur_temp += sim.calc_ac_effect(self._actions[power])
 
 		reward = self._get_reward()
 		terminated = self._time > self._length
