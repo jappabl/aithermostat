@@ -124,9 +124,9 @@ def optimize_model():
 term_cols = os.get_terminal_size().columns
 
 if torch.cuda.is_available() or torch.backends.mps.is_available():
-	num_episodes = 600
+	num_episodes = 200
 else:
-	num_episodes = 600
+	num_episodes = 200
 
 # num_episodes = 1
 

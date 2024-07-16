@@ -25,24 +25,30 @@ ax1.set_ylabel("deg C")
 
 sim_max = 2880
 
-# weather_start = 695991
+# weather_start = 975068
 weather_start = random.randrange(0, len(const.OUTSIDE_TEMP) - sim_max)
 
 xvalues = np.arange(0, sim_max)
 temperatures = np.zeros(sim_max)
 outside_temp = np.zeros(sim_max)
+wall_temp = np.zeros(sim_max)
 
 state, _ = env.reset(num_setpoints=1, length=sim_max, start_time=weather_start)
 
 for i in range(sim_max):	
 	temperatures[i] = env.get_cur_temp()
 	outside_temp[i] = const.OUTSIDE_TEMP[weather_start + i]
-	state, _, _ = env.step(1)
+	wall_temp[i] = env._cur_int_wall_temp
+	# state, _, _ = env.step(0)
+	# state, _, _ = env.step(1)
+	state, _, _ = env.step(2)
 
 ax1.plot(xvalues, temperatures, color="red", linewidth=0.1)
 ax1.plot(xvalues, outside_temp, color="green", linewidth=0.1)
+# ax1.plot(xvalues, wall_temp, color="blue", linewidth=0.1)
 # plt.show()
-plt.savefig("old2.png", dpi=1000)
+plt.savefig("run_sim.png", dpi=1000)
 
 # cycles
 # m2K/W * m2 * K
+print(weather_start)

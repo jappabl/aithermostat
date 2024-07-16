@@ -35,10 +35,9 @@ class DQN(nn.Module):
 action_size = env.action_space.n
 state, _ = env.reset()
 observation_size = len(state)
-print(action_size)
 
 policy_net = DQN(observation_size, action_size).to("cpu")
-policy_net.load_state_dict(torch.load("subtract_4_3k_random_weather.pt", map_location="cpu"))
+policy_net.load_state_dict(torch.load("subtract_4_3k_random_weather_2.pt", map_location="cpu"))
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -57,7 +56,7 @@ ax2 = ax1.twinx()
 ax2.set_ylim(-1, 5)
 ax2.set_ylabel("mean temp deviation or ac/heater power")
 
-sim_max = 2880
+sim_max = 1440
 
 # weather_start = 695991
 weather_start = random.randrange(0, len(const.OUTSIDE_TEMP) - sim_max)
@@ -76,9 +75,10 @@ deviation_sum = 0
 state, _ = env.reset(num_setpoints=1, length=sim_max, start_time=weather_start)
 
 for i in range(sim_max):	
-	# power = policy_net(torch.tensor(state)).max(0).indices.view(1, 1).item()
-	power = agents.dumb_agent.agent(env.get_cur_temp(), const.OUTSIDE_TEMP[weather_start + i], env.get_setpoint(), env._actions[old_action])
-	power = env._actions.index(power)
+	# print(policy_net(state))
+	power = policy_net(state).max(0).indices.view(1, 1).item()
+	# power = agents.dumb_agent.agent(env.get_cur_temp(), const.OUTSIDE_TEMP[weather_start + i], env.get_setpoint(), env._actions[old_action])
+	# power = env._actions.index(power)
 	# if env._sgn(power) != env._sgn(old_action):
 	if power != old_action:
 		cycles += 1
@@ -93,6 +93,8 @@ for i in range(sim_max):
 	deviation_sum += abs(temperatures[i] - env.get_setpoint())
 	state, reward, _ = env.step(power)
 
+	print(reward)
+
 	mean_dev[i] = deviation_sum / (i + 1)
 
 ax1.plot(xvalues, temperatures, color="red", linewidth=0.1)
@@ -101,7 +103,7 @@ ax1.plot(xvalues, outside_temp, color="green", linewidth=0.1)
 ax2.plot(xvalues, on_off, color="black", linewidth=0.1)
 ax2.plot(xvalues, mean_dev, color="purple", linewidth=0.1)
 # plt.show()
-plt.savefig("old2.png", dpi=1000)
+plt.savefig("run.png", dpi=1000)
 
 print(cycles)
 
