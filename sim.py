@@ -1,4 +1,5 @@
 import const
+import housebuilder
 import agents.dumb_agent
 import agents.pid_agent
 import random
@@ -69,93 +70,10 @@ def calc_ac_effect(power: float) -> float:
 	noise = 1 if const.DETERMINISTIC else random.uniform(const.NOISE_MULT_MIN, const.NOISE_MULT_MAX)
 	return change * noise * 60
 
-# def calc_next_temp(power: float, cur_temp: float, time: float) -> float:
-# 	change = calc_transfer_thru_wall(cur_temp, torch.take(const.OUTSIDE_TEMP, time))
-# 	change += calc_transfer_thru_roof(cur_temp, torch.take(const.OUTSIDE_TEMP, time))
-# 	# power = clamp(power, -1, 1)
-
-# 	# if power < 0 and not const.COOL_IS_CONTINUOUS:
-# 	# 	power = torch.round(power * (const.COOL_SETTINGS_NUM - 1)) / (const.COOL_SETTINGS_NUM - 1)
-# 	# if power > 0 and not const.HEAT_IS_CONTINUOUS:
-# 	# 	power = torch.round(power * (const.HEAT_SETTINGS_NUM - 1)) / (const.HEAT_SETTINGS_NUM - 1)
-	
-# 	# if power < 0 and power > -const.COOL_MIN_POWER:
-# 	# 	power = 0
-# 	# if power > 0 and power < const.HEAT_MIN_POWER:
-# 	# 	power = 0
-
-# 	change += calc_ac_effect(power)
-# 	return cur_temp + change
-
-# if __name__ == "__main__":
-# 	random.seed(1)
-
-# 	fig, ax1 = plt.subplots()
-# 	ax1.set_xlabel("time (min)")
-# 	ax1.set_ylim(10, 30)
-# 	ax1.set_yticks(np.arange(10, 31))
-# 	ax1.set_ylabel("deg C")
-
-# 	ax2 = ax1.twinx()
-# 	ax2.set_ylim(-1, 5)
-# 	ax2.set_ylabel("mean temp deviation or ac/heater power")
-
-# 	target_temperature = 0
-
-# 	cur_temp = const.ROOM_START_TEMP
-
-# 	sim_max = 1440
-
-# 	xvalues = np.arange(0, sim_max)
-# 	temperatures = np.zeros(sim_max)
-# 	setpoints = np.zeros(sim_max)
-# 	outside_temp = np.zeros(sim_max)
-# 	on_off = np.zeros(sim_max)
-# 	mean_deviation = np.zeros(sim_max)
-
-# 	deviation_sum = 0
-# 	old_power = 0
-# 	cycle_count = 0
-
-# 	for i in range(sim_max):
-# 		if i in const.SETPOINT_LIST:
-# 			target_temperature = const.SETPOINT_LIST[i]
-# 		temperatures[i] = cur_temp
-# 		setpoints[i] = target_temperature
-# 		change = calc_transfer_thru_wall(cur_temp, const.OUTSIDE_TEMP[i])
-# 		power = agents.dumb_agent.agent(cur_temp, const.OUTSIDE_TEMP[i], target_temperature, old_power)
-# 		power = clamp(power, -1, 1)
-
-# 		if power < 0 and not const.COOL_IS_CONTINUOUS:
-# 			power = round(power * (const.COOL_SETTINGS_NUM - 1)) / (const.COOL_SETTINGS_NUM - 1)
-# 		if power > 0 and not const.HEAT_IS_CONTINUOUS:
-# 			power = round(power * (const.HEAT_SETTINGS_NUM - 1)) / (const.HEAT_SETTINGS_NUM - 1)
-		
-# 		if power < 0 and power > -const.COOL_MIN_POWER:
-# 			power = 0
-# 		if power > 0 and power < const.HEAT_MIN_POWER:
-# 			power = 0
-
-# 		if (old_power < 0 or old_power > 0) and power == 0:
-# 			cycle_count += 1
-
-# 		old_power = power
-# 		change += calc_ac_effect(power)
-# 		cur_temp += change
-# 		outside_temp[i] = const.OUTSIDE_TEMP[i]
-# 		on_off[i] = power
-
-# 		deviation_sum += abs(cur_temp - target_temperature)
-# 		mean_deviation[i] = deviation_sum / (i + 1)
-# 		# print(f"current {cur_temp} want {target_temperature}")
-
-# 	print(f"cycle count {cycle_count}")
-
-# 	ax1.plot(xvalues, temperatures, color="red", linewidth=0.1)
-# 	ax1.plot(xvalues, setpoints, color="blue", linewidth=0.1)
-# 	ax1.plot(xvalues, outside_temp, color="green", linewidth=0.1)
-# 	ax2.plot(xvalues, on_off, color="black", linewidth=0.05)
-# 	ax2.plot(xvalues, mean_deviation, color="purple", linewidth=0.1)
-# 	plt.savefig("stupid.png", dpi=1000)
-
-# 	# m2K/W * m2 * K
+if __name__ == "__main__":
+	house = housebuilder.build_house("2r_simple.json")
+	rooms = house.get_rooms(0)
+	for i in range(len(rooms)):
+		print(f"room {i}: {rooms[i]}")
+		print(f"room {i} external perimeter: {house.get_external_perimeter(0, i)}")
+		print(f"room {i} internal walls: {house.get_internal_walls(0, i)}")
