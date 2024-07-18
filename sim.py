@@ -66,7 +66,7 @@ def calc_ac_effect(power: float) -> float:
 	if power == 0:
 		return 0
 	change = cool_energy_transfer_watt if power < 0 else heat_energy_transfer_watt
-	noise = random.uniform(const.NOISE_MULT_MIN, const.NOISE_MULT_MAX)
+	noise = 1 if const.DETERMINISTIC else random.uniform(const.NOISE_MULT_MIN, const.NOISE_MULT_MAX)
 	return change * noise * 60
 
 # def calc_next_temp(power: float, cur_temp: float, time: float) -> float:

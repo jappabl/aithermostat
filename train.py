@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from collections import namedtuple, deque
 from itertools import count
 import numpy as np
+import sys
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -17,8 +18,8 @@ env = gym_environment.Environment()
 	
 BATCH_SIZE = 128
 GAMMA = 0.99
-EPS_START = 0.9
-EPS_END = 0.05
+EPS_START = 1
+EPS_END = 0
 EPS_DECAY = 1000
 TAU = 0.005
 LR = 1e-4
@@ -114,6 +115,8 @@ def optimize_model():
 	criterion = nn.SmoothL1Loss()
 	loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
+	print(loss)
+
 	# Optimize the model
 	optimizer.zero_grad()
 	loss.backward()
@@ -123,12 +126,12 @@ def optimize_model():
 
 term_cols = os.get_terminal_size().columns
 
-if torch.cuda.is_available() or torch.backends.mps.is_available():
-	num_episodes = 200
-else:
-	num_episodes = 200
+# if torch.cuda.is_available() or torch.backends.mps.is_available():
+# 	num_episodes = 1000
+# else:
+# 	num_episodes = 1000
 
-# num_episodes = 1
+num_episodes = int(sys.argv[-1])
 
 xvalues = np.arange(1441)
 temps = np.zeros(1441)

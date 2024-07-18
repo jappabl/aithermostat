@@ -19,8 +19,8 @@ class Environment(gym.Env):
 	def _get_observations(self):
 		return torch.tensor([self._cur_temp, self._cur_setpoint, const.OUTSIDE_TEMP[self._time], self._last_toggle, self._old_power], device=const.DEVICE)
 	def _get_reward(self):
-		error = abs(self._cur_setpoint - self._cur_temp)
-		return -error
+		# error = abs(self._cur_setpoint - self._cur_temp)
+		return -abs(self._cur_setpoint - self._cur_temp)
 		# if 0 <= error <= 0.5:
 		# 	return 0
 		# return -(math.exp(error - 2) - const.REWARD_CONSTANT)
@@ -109,11 +109,12 @@ class Environment(gym.Env):
 
 		if self._old_power != power:
 			# print(math.exp(-(self._last_toggle - self._time) / 10 + 5) / 10)
-			# if self._time - self._last_toggle <= 6:
+			if self._time - self._last_toggle <= 6:
+				reward -= 1.5
 				# penalty = 10 - (self._time - self._last_toggle)
 				# print("penalty", penalty)
 				# reward -= penalty
-			reward -= math.exp(-(self._time - self._last_toggle) / 3 + 6) / 50
+			# reward -= math.exp(-(self._time - self._last_toggle) / 3 + 5) / 40
 			# reward -= max(0, self._last_toggle - self._time + 30) / 4
 			self._last_toggle = self._time
 

@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import agents.pid_agent
 import gym_environment
+import sys
 
 env = gym_environment.Environment()
 
@@ -34,7 +35,7 @@ policy_net.load_state_dict(torch.load("subtract_4_3k_random_weather_2.pt"))
 
 fig, axes = plt.subplots(1, 2)
 
-episode_count = 100
+episode_count = int(sys.argv[-1])
 sim_max = 2880
 num_setpoints = 4
 
