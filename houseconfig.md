@@ -43,3 +43,5 @@ $\begin{gather}
 \end{gather}$
 
 "doors" is also an array of objects with the same format as "windows"
+
+https://help.iesve.com/ve2021/table_6_thermal_conductivity__specific_heat_capacity_and_density.htm#
