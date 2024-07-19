@@ -23,7 +23,7 @@ OUTSIDE_CONVECTION_COEFF = 13 # W/m^2 * C -----  affected by circulation of envi
 INSIDE_CONVECTION_COEFF = 2 # W/m^2 * C -----  affected by circulation of environment, may have to change later
 
 ROOF_THICK = 0.12 # thickness (m)
-ROOF_THERM_COND = 0.62 # thermal conductivity (W/mK)
+ROOF_THERM_COND = 0.41 # thermal conductivity (W/mK)
 
 FLOOR_AREA = 20 # meters same as roof
 
@@ -32,10 +32,9 @@ ROOM_START_TEMP = 20
 OUTSIDE_TEMP = []
 COMFORT_TOLERANCE = 1
 
-# NOISE_MULT_MIN = 0.8
-# NOISE_MULT_MAX = 1.2
-NOISE_MULT_MIN = 1
-NOISE_MULT_MAX = 1
+DETERMINISTIC = True
+NOISE_MULT_MIN = 0.8
+NOISE_MULT_MAX = 1.2
 
 COOL_IS_CONTINUOUS = True
 HEAT_IS_CONTINUOUS = False
