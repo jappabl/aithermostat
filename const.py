@@ -22,6 +22,12 @@ OUT_WALL_STARTING_TEMP = 20
 OUTSIDE_CONVECTION_COEFF = 13 # W/m^2 * C -----  affected by circulation of environment, may have to change later
 INSIDE_CONVECTION_COEFF = 2 # W/m^2 * C -----  affected by circulation of environment, may have to change later
 
+SHGC = 0.45 # Solar Heat Gain Coefficient ----- coefficient to determine heat through sun rays in a window
+AIR_VELOCITY_INDOORS = 0.11 # air speed indoors needed for volumetric flow rate calc
+
+WINDOW_CORRECTION_FACTOR = 0.6 # reality check on physics (includes error for imperfect physics)
+DOOR_CORRECTION_FACTOR = 0.8 # reality check on physics (includes error for imperfect physics)
+
 ROOF_THICK = 0.12 # thickness (m)
 ROOF_THERM_COND = 0.41 # thermal conductivity (W/mK)
 

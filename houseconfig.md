@@ -6,6 +6,8 @@ The house can be configured by a JSON file, its format and requirements are desc
 The following constants must be defined:
  * "cooler_btu" in $\mathrm{BTU}$ (number) (BTUs of the cooler)
  * "heater_btu" in $\mathrm{BTU}$ (number) (BTUs of the heater)
+ * "window_correction_factor" (realism gauge for physics calculations)
+ * "door_correction_factor" (realism gauge for physics calculations)
  * "ext_wall_thick" in meters (number) (thickness of external walls) ()
  * "int_wall_thick" in meters (number) (thickness of internal walls)
  * "ext_wall_therm_cond" in $\mathrm{W/mK}$ (number) (thermal conductivity of external walls)
@@ -36,6 +38,7 @@ $\begin{gather}
 	x_0,y_0,x_1,y_1>0
 \end{gather}$
 
+### Windows
 "windows" is an array of objects. Each window object contains 3 key-value pairs: "start", "end", "height" and "open". The starting position of the window is $\mathrm{start}$ meters from $(x_0, y_0)$ and its ending position is $\mathrm{end}$ meters from $(x_0, y_0)$. Consequently, the width of the window is $\mathrm{end}-\mathrm{start}$ meters. "open" is a boolean value; true indicates the window is open and false indicates closed. The following conditions must be true:
 $\begin{gather}
 	0<\mathrm{start}<\mathrm{end}<\sqrt{\left(x_0-x_1\right)^2+\left(y_0-y_1\right)^2} \\
